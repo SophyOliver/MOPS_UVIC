@@ -1,0 +1,39 @@
+#!/bin/bash --login                     #"--login" is specific to the ARCHER supercomputing cluster
+
+#PBS -l select=2                        #specific to the ARCHER supercomputing cluster
+#PBS -l walltime=06:00:00       #specific to the ARCHER supercomputing cluster
+#PBS -A allocationCode          #specific to the ARCHER supercomputing cluster
+
+# This shifts to the directory that you submitted the job from
+cd $PBS_O_WORKDIR                       #specific to the ARCHER supercomputing cluster
+
+cp -p ../MASTER_CODE/* .        #this makes hard copies of you master code into this model run folder
+ln -s ../MASTER_FILES/* .       #this makes soft links of the master files into this model run folder (saves a lot of memory)
+sleep 10                                        #just gives it time to make the copies/links
+
+export PETSC_DIR=/home/n01/n01/samark/petsc-3.6.4 #location to the petsc folder
+$PETSC_DIR/arch-darwin-c-opt/bin/mpiexec -np 4 ./mops \
+        -numtracers 9 \
+        -i po4ini.petsc,dopini.petsc,oxyini.petsc,phyini.petsc,zooini.petsc,detini.petsc,no3ini.petsc,dicini.petsc,alkini.petsc \
+        -o po4.petsc,dop.petsc,oxy.petsc,phy.petsc,zoo.petsc,det.petsc,no3.petsc,dic.petsc,alk.petsc \
+        -me Ae \
+        -mi Ai \
+        -t0 0.0 -iter0 0 \
+        -deltat_clock 0.0013698630136986 \
+        -max_steps 2190000 \
+        -write_steps 73000 \
+        -external_forcing \
+        -use_profiles \
+        -nzeuph 2 \
+        -biogeochem_deltat 43200.0 \
+        -burial_sum_steps 730 \
+		-periodic_matrix \
+		-matrix_cycle_period 1.0 -matrix_num_per_period 12 -matrix_periodic_times_file periodic_times_365d.bin \
+		-periodic_biogeochem_forcing \
+		-periodic_biogeochem_cycle_period 1.0 -periodic_biogeochem_num_per_period 12 -periodic_biogeochem_periodic_times_file periodic_times_365d.bin \
+		-num_biogeochem_steps_per_ocean_step 8 \
+        -bgc_params_file parameters_input.txt -bgc_paramnames_file parameters_names.txt -num_bgc_params_file num_bgc_params.txt \
+        -separate_biogeochem_time_stepping \
+        -time_avg -avg_start_time_step 72271 -avg_time_steps 730 -avg_start_time_step_reset_freq 73000 \
+        -avg_files po4avg.petsc,dopavg.petsc,oxyavg.petsc,phyavg.petsc,zooavg.petsc,detavg.petsc,no3avg.petsc,dicavg.petsc,alkavg.petsc \
+        > log 

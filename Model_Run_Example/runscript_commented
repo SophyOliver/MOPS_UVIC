@@ -1,0 +1,39 @@
+#!/bin/bash --login			#"--login" is specific to the ARCHER supercomputing cluster
+
+#PBS -l select=2			#specific to the ARCHER supercomputing cluster
+#PBS -l walltime=06:00:00	#specific to the ARCHER supercomputing cluster
+#PBS -A allocationCode		#specific to the ARCHER supercomputing cluster
+
+# This shifts to the directory that you submitted the job from
+cd $PBS_O_WORKDIR			#specific to the ARCHER supercomputing cluster
+
+cp -p ../MASTER_CODE/* .	#this makes hard copies of you master code into this model run folder
+ln -s ../MASTER_FILES/* .	#this makes soft links of the master files into this model run folder (saves a lot of memory)
+sleep 10					#just gives it time to make the copies/links
+
+export PETSC_DIR=/home/n01/n01/samark/petsc-3.6.4 #location to the petsc folder
+aprun -n 48 ./mops \		#execute mops using aprun or mpirun across the available cores
+        -numtracers 9 \		#number of tracers to model (don't change)
+        -i po4ini.petsc,dopini.petsc,oxyini.petsc,phyini.petsc,zooini.petsc,detini.petsc,no3ini.petsc,dicini.petsc,alkini.petsc \	#names of the tracer input files (don't change)
+        -me Ae \			#name prefix of the tmm matrices needed for ocean transport (don't change)
+        -mi Ai \			#name prefix of the tmm matrices needed for ocean transport (don't change)
+        -t0 0.0 -iter0 0 \	#(don't change)
+        -deltat_clock 0.0013698630136986 \	#(don't change)
+        -max_steps 2190000 \	#this makes the model run up to equilibrium at 3000 simulated years (don't change)
+        -write_steps 73000 \	#this makes the model outputs get written at every 100 years (each one as a separate column within the files such as po4.avg and po4avg.petsc). See readme file if you're worried about memory, as you can write out data at fewer times.
+        -o po4.petsc,dop.petsc,oxy.petsc,phy.petsc,zoo.petsc,det.petsc,no3.petsc,dic.petsc,alk.petsc \	#names of output snapshot files (don't change)
+        -external_forcing \	#(don't change)
+        -use_profiles \	#(don't change)
+        -nzeuph 2 \	#(don't change)
+        -biogeochem_deltat 43200.0 \	#(don't change)
+        -burial_sum_steps 730 \	#(don't change)
+		-periodic_matrix \	#(don't change)
+		-matrix_cycle_period 1.0 -matrix_num_per_period 12 -matrix_periodic_times_file periodic_times_365d.bin \	#(don't change)
+		-periodic_biogeochem_forcing \	#(don't change)
+		-periodic_biogeochem_cycle_period 1.0 -periodic_biogeochem_num_per_period 12 -periodic_biogeochem_periodic_times_file periodic_times_365d.bin \	#(don't change)
+		-num_biogeochem_steps_per_ocean_step 8 \	#(don't change)
+        -bgc_params_file parameters_input.txt -bgc_paramnames_file parameters_names.txt -num_bgc_params_file num_bgc_params.txt \ #specifies the parameter input files (don't change)
+        -separate_biogeochem_time_stepping \	#(don't change)
+        -time_avg -avg_start_time_step 72271 -avg_time_steps 730 -avg_start_time_step_reset_freq 73000 \ #specifies the time averaging details for the output files such as po4avg.petsc. This links with write-steps. Again, see readme file if you're worried about memory, as you can write out data at fewer times.
+        -avg_files po4avg.petsc,dopavg.petsc,oxyavg.petsc,phyavg.petsc,zooavg.petsc,detavg.petsc,no3avg.petsc,dicavg.petsc,alkavg.petsc \	#names of averaged output files (don't change)
+        > log 	#writes print statements to log file
