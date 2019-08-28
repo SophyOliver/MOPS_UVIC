@@ -43,37 +43,37 @@ This controls the annual-averaged outputs like po4avg.petsc (which will be used 
         -write_steps 2190000
         -time_avg -avg_start_time_step 2189271 -avg_time_steps 730 -avg_start_time_step_reset_freq 2190000 \
         
-6) In MASTER_CODE at the terminal, type "make clean", then "make mops" to recompile the mops executable.
+7) In MASTER_CODE at the terminal, type "make clean", then "make mops" to recompile the mops executable.
 
-7) The 6 parameters to be optimised are specified within the input file 'parameters_input.txt' (in Model_Run_Example). The parameter names are specified in MASTER_FILES/parameters_names.txt (don't change), and number of parameters are specified in MASTER_FILES/num_bgc_params.txt (don't change). The paramater bounds for these 6 parameters are as follows:
+8) The 6 parameters to be optimised are specified within the input file 'parameters_input.txt' (in Model_Run_Example). The parameter names are specified in MASTER_FILES/parameters_names.txt (don't change), and number of parameters are specified in MASTER_FILES/num_bgc_params.txt (don't change). The paramater bounds for these 6 parameters are as follows:
 
-    Parameter name: Lower Bound:  Upper Bound
-    ro2ut           150           200
-    ACik            4.0           48
-    ACkpo4          0.0001        0.5
-    ACmuzoo         0.1           4.0
-    AComniz         0             10
-    detmartin       0.4           1.8
+        Parameter name: Lower Bound:  Upper Bound
+        ro2ut           150           200
+        ACik            4.0           48
+        ACkpo4          0.0001        0.5
+        ACmuzoo         0.1           4.0
+        AComniz         0             10
+        detmartin       0.4           1.8
 
-8) Run the MOPS model by submitting 'runscript' to the cluster. 'runscript_commented' is well commented for further information. All messages are logged in the 'log' file.
+9) Run the MOPS model by submitting 'runscript' to the cluster. 'runscript_commented' is well commented for further information. All messages are logged in the 'log' file.
 
-9) The 3 output data files to be used in the misfit/cost function are:
+10) The 3 output data files to be used in the misfit/cost function are:
 
-      'po4avg.petsc' - this is modelled phosphate
-      'oxyavg.petsc' - this is modelled oxygen
-      'no3avg.petsc' - this is modelled nitrate. 
+        'po4avg.petsc' - this is modelled phosphate
+        'oxyavg.petsc' - this is modelled oxygen
+        'no3avg.petsc' - this is modelled nitrate. 
       
 The final columns of these 3 files are to be used in the misfit calculation. The final columns can be read in MATLAB like this:
 
       data = readPetscBinVec('po4avg.petsc',1,-1);
 
-10) The 3 observational files of real ocean data, to be used in the misfit/cost function are:
+11) The 3 observational files of real ocean data, to be used in the misfit/cost function are:
 
-      'woa18_0_0_p_UVic.petsc' - this is observed phosphate
-      'woa18_0_0_o_UVic.petsc' - this is observed oxygen
-      'woa18_0_0_n_UVic.petsc' - this is observed nitrate
+        'woa18_0_0_p_UVic.petsc' - this is observed phosphate
+        'woa18_0_0_o_UVic.petsc' - this is observed oxygen
+        'woa18_0_0_n_UVic.petsc' - this is observed nitrate
       
 These are single vectors, to be compared to the final column vectors of the 'po4/oxy/no3avg.petsc' files using your choice of root mean square error.
 
-11) Good luck :)
+12) Good luck :)
 
