@@ -18,7 +18,7 @@ with PETSc version 3.6.x.
 
   6.1) -write_steps 73000 \
   
-        One year of the model equates to 730 timesteps. This line above makes the model write outputs for every 100 years of the 3000 year model run (each time it writes out it appends the 18 files like po4.petsc and po4avg.petsc with another column). This is very useful for us (me and my supervisor), but not so much for what you are doing, as you will only be calculating the misfit/cost fuction at the final (3000) year. Every time you run the model, you will write out this amount of data:
+One year of the model equates to 730 timesteps. This line above makes the model write outputs for every 100 years of the 3000 year model run (each time it writes out it appends the 18 files like po4.petsc and po4avg.petsc with another column). This is very useful for us (me and my supervisor), but not so much for what you are doing, as you will only be calculating the misfit/cost fuction at the final (3000) year. Every time you run the model, you will write out this amount of data:
         
         -write_steps 73000 (desirable)          = every 100 yrs   = 21MB per output file    = 378MB for all 18 output files
         -write_steps 365000 (acceptable)        = every 500 yrs   = 4.2MB per output file   = 75.6MB for all 18 output files
@@ -29,7 +29,7 @@ So depending on how many samples you will run of the MOPS model, you will need t
 
   6.2) -time_avg -avg_start_time_step 72271 -avg_time_steps 730 -avg_start_time_step_reset_freq 73000 \
   
-        This controls the annual-averaged outputs like po4avg.petsc (which will be used to compare to observations), and needs to be edited depending on which -write_steps option you choose:
+This controls the annual-averaged outputs like po4avg.petsc (which will be used to compare to observations), and needs to be edited depending on which -write_steps option you choose:
         
         -write_steps 73000 \
         -time_avg -avg_start_time_step 72271 -avg_time_steps 730 -avg_start_time_step_reset_freq 73000 \
@@ -47,13 +47,13 @@ So depending on how many samples you will run of the MOPS model, you will need t
 
 7) The 6 parameters to be optimised are specified within the input file 'parameters_input.txt' (in Model_Run_Example). The parameter names are specified in MASTER_FILES/parameters_names.txt (don't change), and number of parameters are specified in MASTER_FILES/num_bgc_params.txt (don't change). The paramater bounds for these 6 parameters are as follows:
 
-Parameter name: Lower Bound:  Upper Bound
-ro2ut           150           200
-ACik            4.0           48
-ACkpo4          0.0001        0.5
-ACmuzoo         0.1           4.0
-AComniz         0             10
-detmartin       0.4           1.8
+    Parameter name: Lower Bound:  Upper Bound
+    ro2ut           150           200
+    ACik            4.0           48
+    ACkpo4          0.0001        0.5
+    ACmuzoo         0.1           4.0
+    AComniz         0             10
+    detmartin       0.4           1.8
 
 8) Run the MOPS model by submitting 'runscript' to the cluster. 'runscript_commented' is well commented for further information. All messages are logged in the 'log' file.
 
