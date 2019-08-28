@@ -1,12 +1,12 @@
 # MOPS_UVIC
 Code for Muhammad Kasim
 
-This repository contains all (except Petsc) files necessary to run the MOPS ocean biogeochemical model with the UVIC ocean circulation TMM (transport) files.
+This repository contains all (except Petsc) files necessary to run the MOPS ocean biogeochemical model with the UVIC ocean circulation TMM (transport) files (see Kriest, I., Sauerland, V., Khatiwala, S., Srivastav, A., & Oschlies, A. (2017). Calibrating a global three-dimensional biogeochemical ocean model (MOPS-1.0). Geoscientific Model Development, 10(1), 127–154).
 
 1) Install PETSc (http://www.mcs.anl.gov/petsc/). The TMM driver code is compatible 
 with PETSc version 3.6.x.
 
-2) Download all files in this git hub repository
+2) Download all files in this git hub repository (to unzip all files in MASTER_FILES type into the terminal "gzip -d *")
 
 3) Edit runscript (in Model_Run_Example) to include necessary job submission text
 
